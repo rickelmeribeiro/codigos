@@ -1,0 +1,111 @@
+FUNÇÃO PARA LISTAR AS CREDENCIAIS DO BANCO DE DADOS:
+
+<?php
+function listarGeral($campos, $tabela)
+{
+    $conn = conectar();
+    try {
+        $sqlLista = $conn->prepare("SELECT $campos FROM $tabela");
+        $sqlLista->execute();
+
+        if ($sqlLista->rowCount() > 0) {
+            $results = $sqlLista->fetchAll(PDO::FETCH_OBJ);
+            $conn = null;
+            return $results;
+        } else {
+            $conn = null;
+            return array();
+        }
+    } catch (PDOException $e) {
+        $conn = null;
+        echo 'Exception -> ' . $e->getMessage();
+        return false;
+    }
+}
+
+
+CHAMAR A FUNÇÃO DE LISTAR AS CREDENCIAIS:
+
+<tbody>
+            <?php
+            $NOMEDAVARIAVEL1 = listarGeral('CAMPOS', 'TABELA');
+            if ($NOMEDAVARIAVEL1) {
+                foreach ($NOMEDAVARIAVEL1 as $NOMEDAVARIAVEL2) {
+                    $CAMPO1 = $NOMEDAVARIAVEL2->CAMPO1;
+                    $CAMPO2 = $NOMEDAVARIAVEL2->CAMPO2;
+                    $CAMPO3 = $NOMEDAVARIAVEL2->CAMPO3;
+                    $CAMPO4 = $NOMEDAVARIAVEL2->CAMPO4;
+                    ?>
+                    <tr>
+                        <th scope="row"><?php echo $CAMPO1 ?></th>
+                        <td><?php echo $CAMPO2 ?></td>
+                        <td><?php echo $CAMPO3 ?></td>
+                        <td>R$<?php echo $CAMPO4 ?></td>
+                        <td>
+                            <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                                <button type="button" class="btn btn-primary">Alterar</button>
+                                <button type="button" class="btn btn-danger">Excluir</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <?php
+                }
+            } else {
+
+                ?>
+                <tr>
+                    <th scope="row" colspan="6" class="text-center">Dados Não Econtrados!</th>
+                </tr>
+                <?php
+            }
+            ?>
+            </tbody>
+
+
+
+
+
+
+
+const NomeModalInstancia = new bootsrap.Modal(document.getElementById('IdModal'));
+const NomeModal = document.getElementById('idModal');
+const NomeInput = document.getElementById('idInput');
+const NomeBotao = document.getElementById('idBotao');
+
+if (NomeModal){
+    const NomeFormulario = document.getElementById('idFormulario');
+
+    NomeModal.addEventListener('shown.bs.modal', () =>{
+        NomeInput.focus();
+        const submitHandler = function (event) {
+            event.preventDefault();
+            NomeBotao.disabled = true;
+            NomeModalInstancia.hide();
+            var form = event.target;
+            var formData = new FormData(form);
+            formData.append('show','pizzaAdd');
+            fetch('controle.php',{
+                method: 'POST',
+                body: formData,
+            })
+                .then(response => response.json())
+                .then(data =>{
+                    if (data.success){
+                        form.reset();
+                        NomeBotao.disabled = false;
+                        form.removeEventListener('submit', submitHandler);
+                        setTimeout(function (){
+                            alert('Cadastrado com Sucesso');
+                        }, 1000);
+                    } else {
+                        console.error('Erro na Requisição de retorno');
+                    }
+                })
+                .catch(error =>{
+                    console.error('Erro na Requisição:', error);
+                });
+        };
+        NomeFormulario.addEventListener('submit', submitHandler);
+    });
+}
+
