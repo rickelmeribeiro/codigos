@@ -62,50 +62,57 @@ CHAMAR A FUNÇÃO DE LISTAR AS CREDENCIAIS:
             </tbody>
 
 
+CHAMAR FUNÇÃO INSERIR
 
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
+    $VARIAVEL1 = $_POST["VARIAVEL1"];
+    $VARIAVEL2 = $_POST['VARIAVEL2'];
+    $VARIAVEL3 = $_POST['VARIAVEL3'];
 
+    try {
+        $conn = conectar();
 
+        $query = "INSERT INTO TABELA (CAMPOS) VALUES (:CAMPOS)";
+        $stmt = $conn->prepare($query);
 
-const NomeModalInstancia = new bootsrap.Modal(document.getElementById('IdModal'));
-const NomeModal = document.getElementById('idModal');
-const NomeInput = document.getElementById('idInput');
-const NomeBotao = document.getElementById('idBotao');
+        $stmt->bindParam(":CAMPOS", $CAMPOS);
+        $stmt->bindParam(":CAMPOS", $CAMPOS);
+        $stmt->bindParam(":CAMPOS", $CAMPOS);
+        $stmt->execute();
 
-if (NomeModal){
-    const NomeFormulario = document.getElementById('idFormulario');
-
-    NomeModal.addEventListener('shown.bs.modal', () =>{
-        NomeInput.focus();
-        const submitHandler = function (event) {
-            event.preventDefault();
-            NomeBotao.disabled = true;
-            NomeModalInstancia.hide();
-            var form = event.target;
-            var formData = new FormData(form);
-            formData.append('show','pizzaAdd');
-            fetch('controle.php',{
-                method: 'POST',
-                body: formData,
-            })
-                .then(response => response.json())
-                .then(data =>{
-                    if (data.success){
-                        form.reset();
-                        NomeBotao.disabled = false;
-                        form.removeEventListener('submit', submitHandler);
-                        setTimeout(function (){
-                            alert('Cadastrado com Sucesso');
-                        }, 1000);
-                    } else {
-                        console.error('Erro na Requisição de retorno');
-                    }
-                })
-                .catch(error =>{
-                    console.error('Erro na Requisição:', error);
-                });
-        };
-        NomeFormulario.addEventListener('submit', submitHandler);
-    });
+        header("Location: LOCATION.php");
+        exit();
+    } catch (PDOException $e) {
+        echo "Erro ao inserir registro: " . $e->getMessage();
+    }
+} else {
+    header("Location: LOCATION.php");
+    exit();
 }
 
+FUNÇÃO INSERIR FORMULARIO
+
+<form name="frmAddPizza" id="frmAddPizza" method="post" action="PAGINADAFUNCAO.php">
+                            <div class="mb-3">
+                                <label for="InSabor" class="form-label">Sabor:</label>
+                                <input type="text" name="InSabor" class="form-control" id="InSabor"
+                                       aria-describedby="emailHelp">
+                            </div>
+
+                            <div class="mb-3">
+                                <select class="form-select" id="selectTamanho" name="selectTamanho" aria-label="selectTamanho">
+                                    <option value="Pequena" selected>Pequena</option>
+                                    <option value="Média">Média</option>
+                                    <option value="Grande">Grande</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="InValor" class="form-label">Valor:</label>
+                                <input type="text" name="InValor" class="form-control" id="InValor">
+                            </div>
+                            <button type="submit" id="btnAddPizza" class="btn btn-primary">Cadastrar</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+
+                        </form>
