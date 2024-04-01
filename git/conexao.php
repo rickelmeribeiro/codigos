@@ -1,5 +1,3 @@
-
-
 <?php
 function conectar()
 {
@@ -8,8 +6,10 @@ function conectar()
 //        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $conn->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
     } catch (PDOException $e) {
-        echo "Erro ao conectar ao banco de dados" . $e->getMessage();
+        // Lançar uma exceção para que a aplicação que chamou conectar() possa lidar com o erro
+        throw new Exception("Erro ao conectar ao banco de dados: " . $e->getMessage());
         die();
     }
     return $conn;
 }
+

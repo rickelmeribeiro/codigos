@@ -1,5 +1,3 @@
-constante
-
 <?php
 date_default_timezone_set('America/Sao_Paulo');
 setlocale(LC_ALL, 'pt_BR');
@@ -19,10 +17,10 @@ if ($servidorLocal) {
     define('HOST', 'localhost');
     define('USER', 'root');
     define('PASS', '');
-    define('DBNAME', '');
+    define('DBNAME', 'estudo');
 } else {
     define('HOST', '192.168.1.1');
-    define('USER', 'asfasd');
-    define('PASS', 'asdfasf');
-    define('DBNAME', 'confeitaria');
+    define('USER', 'root');
+    define('PASS', '');
+    define('DBNAME', 'estudo');
 }
